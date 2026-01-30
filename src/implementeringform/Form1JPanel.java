@@ -170,3 +170,4 @@ public class Form1JPanel extends javax.swing.JPanel {
     private javax.swing.JButton jbtnSpara;
     // End of variables declaration//GEN-END:variables
 }
+
