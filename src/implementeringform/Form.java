@@ -20,6 +20,12 @@ public abstract class Form implements Serializable {
     protected boolean running;
     protected boolean positivRiktning;
     protected Color color;
+    protected int x;
+    protected int y;
+    
+    public void moveX(int dx) {
+    x += dx;
+    }
 
     public Form(int xP, int yP) {
         this.yPos = yP;
