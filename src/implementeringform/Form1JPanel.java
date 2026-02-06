@@ -15,13 +15,15 @@ public class Form1JPanel extends javax.swing.JPanel {
 
     public ArrayList<Form> former = new ArrayList<>();
     FileManager fmgr = new FileManager();
+    boolean Animering = true;
+    Thread animationThread;
+    
     /**
      * Creates new form Form1JPanel
      */
     public Form1JPanel(){
         initComponents();
     }
-
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,6 +41,7 @@ public class Form1JPanel extends javax.swing.JPanel {
         RbtnTriangel = new javax.swing.JRadioButton();
         RbtnRektangel = new javax.swing.JRadioButton();
         jbtnHämta = new javax.swing.JButton();
+        tJbtnStarta = new javax.swing.JToggleButton();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -77,27 +80,37 @@ public class Form1JPanel extends javax.swing.JPanel {
             }
         });
 
+        tJbtnStarta.setText("Starta");
+        tJbtnStarta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tJbtnStartaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(RbtnCirkel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(RbtnTriangel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(RbtnRektangel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addComponent(jbtnSpara)
-                        .addGap(3, 3, 3)
-                        .addComponent(jbtnHämta))
+                        .addGap(3, 3, 3))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jbtnRensa)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tJbtnStarta)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbtnRensa)
+                    .addComponent(jbtnHämta))
+                .addGap(9, 9, 9))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +123,9 @@ public class Form1JPanel extends javax.swing.JPanel {
                     .addComponent(RbtnRektangel)
                     .addComponent(jbtnHämta))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbtnRensa)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jbtnRensa)
+                    .addComponent(tJbtnStarta))
                 .addContainerGap(232, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -154,6 +169,44 @@ public class Form1JPanel extends javax.swing.JPanel {
     repaint();
     }//GEN-LAST:event_jbtnHämtaActionPerformed
 
+    private void tJbtnStartaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tJbtnStartaActionPerformed
+        if (tJbtnStarta.isSelected()) {
+            Animering = true;
+                startAnimation();
+    }   else {
+            Animering = false;
+            
+            boolean selected = tJbtnStarta.isSelected();
+
+    if (selected) {
+        System.out.println("Animation START");
+        Animering = true;
+        startAnimation();
+        tJbtnStarta.setText("Stoppa");
+    } else {
+        System.out.println("Animation STOP");
+        Animering = false;
+        tJbtnStarta.setText("Starta");
+    }
+    }
+    }//GEN-LAST:event_tJbtnStartaActionPerformed
+    private void startAnimation() {
+    animationThread = new Thread(() -> {
+        while (Animering) {
+            for (Form f : former) {
+                f.moveX(2);
+            }
+            repaint();
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    });
+    animationThread.start();
+}
+    
 @Override
     protected void paintComponent (Graphics g){
         super.paintComponent (g);
@@ -169,6 +222,7 @@ public class Form1JPanel extends javax.swing.JPanel {
     private javax.swing.JButton jbtnHämta;
     private javax.swing.JButton jbtnRensa;
     private javax.swing.JButton jbtnSpara;
+    private javax.swing.JToggleButton tJbtnStarta;
     // End of variables declaration//GEN-END:variables
 }
 
