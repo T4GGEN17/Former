@@ -48,8 +48,20 @@ public abstract class Form implements Serializable {
         this.running=run;
     }
     
+    boolean Höger = false;
     public void move(int x, int y){
-        
+        if(Höger){
+            xPos +=5;
+            if(xPos>=390){
+                Höger=false;
+            }
+        }
+        else{
+            xPos-=5;
+            if(xPos<=000){
+                Höger=true;
+            }
+        }
     }
     
     public abstract void draw(Graphics g);

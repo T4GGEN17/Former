@@ -30,6 +30,8 @@ public class Triangel extends Form {
 
     @Override
     public void draw(Graphics g) {
+        if(running)
+            move(0,0);
         g.setColor(color);
 
         int[] xs = { xPos-bas/2, xPos, xPos + bas/2 };

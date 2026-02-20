@@ -36,6 +36,8 @@ import java.awt.Graphics;
          */
         @Override
     public void draw(Graphics g) {
+        if(running)
+            move(0,0);
         g.setColor(color);
 
         if (fylld) {

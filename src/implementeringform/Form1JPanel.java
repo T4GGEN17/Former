@@ -11,13 +11,12 @@ import java.util.ArrayList;
  *
  * @author taglu01
  */
-public class Form1JPanel extends javax.swing.JPanel {
+public class Form1JPanel extends javax.swing.JPanel implements Runnable{
 
     public ArrayList<Form> former = new ArrayList<>();
     FileManager fmgr = new FileManager();
-    boolean Animering = true;
-    Thread animationThread;
-    
+    Thread trad;
+    boolean running = false;
     /**
      * Creates new form Form1JPanel
      */
@@ -170,43 +169,50 @@ public class Form1JPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jbtnHämtaActionPerformed
 
     private void tJbtnStartaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tJbtnStartaActionPerformed
-        if (tJbtnStarta.isSelected()) {
-            Animering = true;
-                startAnimation();
-    }   else {
-            Animering = false;
+        if(this.tJbtnStarta.getText().equals("Start")){
+           this.tJbtnStarta.setText("Stop");
+       start();
+       }
+       else{
+           this.tJbtnStarta.setText("Start");
+           stop();
+       }
+       for (int i = 0; i < former.size(); i++) {
             
-            boolean selected = tJbtnStarta.isSelected();
-
-    if (selected) {
-        System.out.println("Animation START");
-        Animering = true;
-        startAnimation();
-        tJbtnStarta.setText("Stoppa");
-    } else {
-        System.out.println("Animation STOP");
-        Animering = false;
-        tJbtnStarta.setText("Starta");
-    }
-    }
-    }//GEN-LAST:event_tJbtnStartaActionPerformed
-    private void startAnimation() {
-    animationThread = new Thread(() -> {
-        while (Animering) {
-            for (Form f : former) {
-                f.moveX(2);
-            }
-            repaint();
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            former.get(i).setRunning(running);
         }
-    });
-    animationThread.start();
+       repaint();
+    }//GEN-LAST:event_tJbtnStartaActionPerformed
+    private void start() {
+        if (trad == null) {
+            trad = new Thread(this);
+            trad.start();
+            this.running = true;
+        }
+    }
+
+    private void stop() {
+        if (trad != null) {
+            this.running = false;
+            trad = null;
+        }
+    }
+
+@Override
+    public void run() {
+        while (running) {
+        for (Form f : former) {
+            f.moveX(2);
+        }
+        repaint();
+        try {
+            Thread.sleep(30);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        break;
+        }
+    }
 }
-    
 @Override
     protected void paintComponent (Graphics g){
         super.paintComponent (g);
