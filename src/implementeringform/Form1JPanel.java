@@ -4,8 +4,8 @@
  */
 package implementeringform;
 
-import java.awt.Graphics;
-import java.util.ArrayList;
+import java.awt.Graphics;// Importerar Graphics-klassen som används för att rita former
+import java.util.ArrayList;// Importerar ArrayList som används för att lagra flera objekt i en lista
 
 /**
  *
@@ -13,10 +13,10 @@ import java.util.ArrayList;
  */
 public class Form1JPanel extends javax.swing.JPanel implements Runnable{
 
-    public ArrayList<Form> former = new ArrayList<>();
-    FileManager fmgr = new FileManager();
-    Thread trad;
-    boolean running = false;
+    public ArrayList<Form> former = new ArrayList<>();// Lista som lagrar alla former som ritas i programmet
+    FileManager fmgr = new FileManager();// Objekt som hanterar läsning och skrivning av filer
+    Thread trad;// Tråd som används för att köra programlogik i bakgrunden
+    boolean running = false;// Variabel som visar om programmet/tråden körs eller inte
     /**
      * Creates new form Form1JPanel
      */
@@ -130,92 +130,99 @@ public class Form1JPanel extends javax.swing.JPanel implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnSparaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnSparaActionPerformed
-        fmgr.saveToFile(former);
+        fmgr.saveToFile(former);// Sparar alla former i listan till en fil
     }//GEN-LAST:event_jbtnSparaActionPerformed
 
     private void jbtnRensaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnRensaActionPerformed
-    this.former.clear();
+    this.former.clear();// Tar bort alla former från listan
     
-    repaint();
+    repaint();// Ritar om panelen så att ändringarna visas på skärmen
     }//GEN-LAST:event_jbtnRensaActionPerformed
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+    // Hämtar musens X- och Y-koordinater där användaren klickade
     int x = evt.getX();
     int y = evt.getY();
-    int b = (int) (Math.random() * 301) +5;
-    int h = (int) (Math.random() * 50) +5;
     
-    if(this.RbtnTriangel.isSelected()){
-        Form t = new Triangel (x, y, b, h, true);
-        former.add(t);
+    int b = (int) (Math.random() * 301) +5;// Slumpar bredd mellan 5 och 305
+    int h = (int) (Math.random() * 50) +5;// Slumpar höjd mellan 5 och 55
+    
+    if(this.RbtnTriangel.isSelected()){// Om radioknappen för triangel är vald
+        Form t = new Triangel (x, y, b, h, true);// Skapar en ny triangel
+        former.add(t);// Lägger till triangeln i listan
     }
     
-    else if(this.RbtnRektangel.isSelected()){
-        Form r = new Rektangel (x, y, b, h, true);
-            former.add(r);
+    else if(this.RbtnRektangel.isSelected()){// Om radioknappen för rektangel är vald
+        Form r = new Rektangel (x, y, b, h, true);// Skapar en ny rektangel
+            former.add(r);// Lägger till rektangeln i listan
     }
     
-    else if(this.RbtnCirkel.isSelected()){
-        Form c = new Cirkel (x, y, h, true);
-            former.add(c);
+    else if(this.RbtnCirkel.isSelected()){// Om radioknappen för cirkel är vald
+        Form c = new Cirkel (x, y, h, true);// Skapar en ny cirkel
+            former.add(c);// Lägger till cirkeln i listan
     }
-    repaint();
+    repaint();// Ritar om panelen så att den nya formen visas
     }//GEN-LAST:event_formMouseClicked
 
     private void jbtnHämtaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnHämtaActionPerformed
-        former = fmgr.readFromFile();
+        former = fmgr.readFromFile(); // Läser in sparade former från fil
         
-    repaint();
+    repaint(); // Ritar om panelen med de inlästa formerna
     }//GEN-LAST:event_jbtnHämtaActionPerformed
 
     private void tJbtnStartaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tJbtnStartaActionPerformed
-        if(this.tJbtnStarta.getText().equals("Start")){
-           this.tJbtnStarta.setText("Stop");
-       start();
+        if(this.tJbtnStarta.getText().equals("Start")){// Kontrollerar om knappen visar "Start"
+           this.tJbtnStarta.setText("Stop");// Byter text till "Stop"
+        start();// Startar animationen/tråden
        }
-       else{
-           this.tJbtnStarta.setText("Start");
-           stop();
+        else{
+           this.tJbtnStarta.setText("Start");// Byter tillbaka texten till "Start"
+           stop();// Stoppar animationen/tråden
        }
-       for (int i = 0; i < former.size(); i++) {
+        // Uppdaterar alla former med aktuell running-status
+        for (int i = 0; i < former.size(); i++) {
             
             former.get(i).setRunning(running);
         }
-       repaint();
+       repaint();// Ritar om panelen
     }//GEN-LAST:event_tJbtnStartaActionPerformed
-    private void start() {
-        if (trad == null) {
-            trad = new Thread(this);
-            trad.start();
-            this.running = true;
+    private void start() {// Startar tråden om ingen tråd redan körs
+        if (trad == null) {// Kontrollerar att tråden inte redan finns
+            trad = new Thread(this);// Skapar en ny tråd
+            trad.start();// Startar tråden
+            this.running = true;// Sätter running till true för att animationen ska köras
         }
     }
 
-    private void stop() {
-        if (trad != null) {
-            this.running = false;
-            trad = null;
+    private void stop() {// Stoppar tråden och animationen
+        if (trad != null) {// Kontrollerar att det finns en aktiv tråd
+            this.running = false;// Stoppar while-loopen i run-metoden
+            trad = null;// Tar bort referensen till tråden
         }
     }
 
 @Override
     public void run() {
-        while (running) {
+        while (running) {// Körs så länge running är true
+        
+        // Flyttar alla former i X-led
         for (Form f : former) {
             f.moveX(2);
         }
-        repaint();
+        repaint();// Ritar om panelen efter förflyttning
         try {
-            Thread.sleep(30);
+            Thread.sleep(30);// Pausar tråden i 30 millisekunder
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        break;
+            Thread.currentThread().interrupt();// Återställer interrupt-status
+        break;// Avslutar loopen vid avbrott
         }
     }
 }
 @Override
     protected void paintComponent (Graphics g){
-        super.paintComponent (g);
+        super.paintComponent (g);// Anropar JPanel:s vanliga ritmetod
+        
+        // Ritar alla former i listan
         for (int i = 0; i<former.size(); i++){
             former.get(i).draw(g);
         }
